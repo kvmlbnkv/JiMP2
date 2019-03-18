@@ -45,25 +45,24 @@ int main(int argc,char *argv[]) {
         string option=argv[3];
         ifstream input(argv[1]);
         ofstream output(argv[2], ios_base::in | ios_base::app);
-        string word;
-        string message ="";
-        input>>word;
-        message+=word;
-        while(input>>word) {
-            message+=" "+word;
+        char line[256];
+        string message = "";
+        while(!input.eof()){
+            input.getline(line,256);
+            message += line;
         }
         if(option == "1"){
-            message=PolybiusCrypt(message);
+            message = PolybiusCrypt(message);
         }
 
         else if(option == "0"){
-            message=PolybiusDecrypt(message);
+            message = PolybiusDecrypt(message);
             output << "(W tej wiadomosci i moze oznaczac j)" << endl << endl;
         }
         else{
             cout << "Nie ma takiej opcji";
         }
-        output<<message;
+        output << message;
         input.close();
         output.close();
     }
