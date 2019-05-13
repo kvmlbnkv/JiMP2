@@ -1,21 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <functional>
+#include <random>
+#include <chrono>
 
 using namespace std;
-
-enum class Polka{
-    VODKA,
-    BEER,
-    JUPIK,
-    SANDWICH,
-    KEBAB,
-    BURGERZMIASTECZKA,
-    SPRITE,
-    BANAN,
-    WINE,
-    SKITELSY
-};
 
 class Proviant{
 private:
@@ -30,6 +20,10 @@ public:
     string GetName(){
         return name;
     }
+
+    double GetBac(){
+        return bac;
+    }
 };
 
 class Beer: public Proviant{
@@ -39,17 +33,17 @@ public:
 
 class Sandwich: public Proviant{
 public:
-    Sandwich():Proviant(0, "Sandwich"){}
+    Sandwich():Proviant(-0.2, "Sandwich"){}
 };
 
 class Vodka: public Proviant{
 public:
-    Vodka():Proviant(3, "Vodka"){}
+    Vodka():Proviant(1.5, "Vodka"){}
 };
 
 class Jupik: public Proviant{
 public:
-    Jupik():Proviant(0, "Jupik"){}
+    Jupik():Proviant(-0.1, "Jupik"){}
 };
 
 class Wine: public Proviant{
@@ -59,21 +53,21 @@ public:
 
 class Kebab: public Proviant{
 public:
-    Kebab():Proviant(0, "Kebab"){}
+    Kebab():Proviant(-1, "Kebab"){}
 };
 
 class Backpack{
 private:
-    vector<reference_wrapper<Proviant>*> b;
+    vector<reference_wrapper<Proviant>> b;
     int products;
 public:
     Backpack(){
         this -> products = 0;
     }
 
-    void add(reference_wrapper<Proviant> *p){
+    void add(reference_wrapper<Proviant> &p){
         if(!isFull()) {
-            b.push_back(p);
+            b.emplace_back(p);
             products++;
         }
         else{
@@ -92,13 +86,18 @@ public:
 
     void print(){
         int i=0;
+        cout << "Plecak:" << endl;
         for(auto &a:b){
-            cout << *a->GetName();
+            cout << a.get().GetName();
             i++;
             if(i < b.size()){
-                cout << ", ";
+                cout << ", " << endl;
             }
         }
+    }
+
+    Proviant Last(){
+        return b.back();
     }
 };
 
@@ -106,30 +105,72 @@ public:
 int main(){
     Backpack B;
     int p;
+    double bac=0;
+    unsigned seed = chrono::steady_clock::now().time_since_epoch().count();
+    default_random_engine e(seed);
     while(true){
         if(!B.isFull()) {
-            p = rand() % 6 + 1;
+            p = e()%6+1;
             switch (p) {
-                case 1:
-                    B.add(new Beer());
+                case 1: {
+                    auto b = ref<Proviant>(*new Beer);
+                    B.add(b);
+                }
                     break;
-                case 2:
-                    B.add(new Sandwich());
+                case 2: {
+                    auto b = ref<Proviant>(*new Sandwich);
+                    B.add(b);
+                }
                     break;
-                case 3:
-                    B.add(new Vodka());
+                case 3: {
+                    auto b = ref<Proviant>(*new Jupik);
+                    B.add(b);
+                }
                     break;
-                case 4:
-                    B.add(new Jupik());
+                case 4: {
+                    auto b = ref<Proviant>(*new Vodka);
+                    B.add(b);
+                }
                     break;
-                case 5:
-                    B.add(new Wine());
+                case 5: {
+                    auto b = ref<Proviant>(*new Wine);
+                    B.add(b);
+                }
                     break;
-                case 6:
-                    B.add(new Kebab());
+                case 6: {
+                    auto b = ref<Proviant>(*new Kebab);
+                    B.add(b);
+                }
                     break;
             }
+            bac = bac + B.Last().GetBac();
+            if(bac < -0.3){
+                bac = -0.3;
+            }
+            if(bac > 0){
+                bac = bac - 0.1;
+            }
+            if(bac < 0){
+                bac = bac + 0.1;
+            }
+        }
+        else{
             B.print();
+            cout << endl;
+            cout << "No jak bedziesz spozywac produkty w takiej kolejnosci jaka jest w plecaku to ";
+            if(bac > 0 && bac <= 0.2){
+                cout << "bedzie gituwa";
+            }
+            else if(bac <= 0){
+                cout << "sredniawo bedzie bo sie nie naje*****...";
+            }
+            else if(bac > 0.2 && bac <= 0.3){
+                cout << "no moze byc zgonek ale bez rzyganaka to nic sie nie stanie w sumie. Zabawa bedzie przednia!";
+            }
+            else if(bac > 0.3){
+                cout << "przeczuwam ze bedzie rzyganko niestety :/";
+            }
+            break;
         }
     }
 }
