@@ -83,12 +83,12 @@ public:
         int start;
         int end;
 
-        ss.ignore();
+        ss.ignore(1, '{');
         ss >> start;
-        ss.ignore();
-        ss.ignore();
+        ss.ignore(1, '}');
+        ss.ignore(1, '{');
         ss >> end;
-        ss.ignore();
+        ss.ignore(1, '}');
         getline(ss, subtitle);
 
         int c = (int) floor(fps * ((double) delay / 1000));
@@ -103,7 +103,7 @@ public:
     }
 
     void validateLineFormat(const string line) {
-        regex pattern("^\\{\\d+\\}\\{\\d+\\}.+$");
+        regex pattern("^(\\{\\d+\\}\\{\\d+\\}).+$");
 
         if (!regex_match(line, pattern)) {
             throw InvalidSubtitleLineFormat("Blad w skladni podanego pliku.");
@@ -113,12 +113,12 @@ public:
         int start;
         int end;
 
-        ss.ignore();
+        ss.ignore(1, '{');
         ss >> start;
-        ss.ignore();
-        ss.ignore();
+        ss.ignore(1, '}');
+        ss.ignore(1, '{');
         ss >> end;
-        ss.ignore();
+        ss.ignore(1, '}');
 
         if(start < end){
             throw SubtitleEndBeforeStart("Klatka zaczyna sie po tym jak sie konczy.");
