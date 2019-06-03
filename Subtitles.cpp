@@ -120,7 +120,7 @@ public:
         ss >> end;
         ss.ignore(1, '}');
 
-        if(start < end){
+        if(start > end){
             throw SubtitleEndBeforeStart("Klatka zaczyna sie po tym jak sie konczy.");
         }
 
