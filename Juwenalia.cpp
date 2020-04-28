@@ -162,13 +162,13 @@ int main(){
                 cout << "bedzie gituwa";
             }
             else if(bac <= 0){
-                cout << "sredniawo bedzie bo sie nie naje*****...";
+                cout << "sredniawa zabawa bedzie...";
             }
             else if(bac > 0.2 && bac <= 0.3){
-                cout << "no moze byc zgonek ale bez rzyganaka to nic sie nie stanie w sumie. Zabawa bedzie przednia!";
+                cout << "zabawa bedzie przednia!";
             }
             else if(bac > 0.3){
-                cout << "przeczuwam ze bedzie rzyganko niestety :/";
+                cout << "przeczuwam ze niestety sie zle skonczy :/";
             }
             break;
         }
